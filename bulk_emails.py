@@ -17,6 +17,7 @@ def Emailer(text, subject, recipient):
     mail.Subject = subject
     mail.HtmlBody = text
     mail.Display(True)
+    exit()
 
 def get_list_path():
     # Open file browser GUI to select email list
@@ -33,7 +34,7 @@ def import_list(filepath):
             # If the first line is a header, ignore it
             if re.search(r"email.|Email.", entry):
                 pass
-            else:
+            elif re.search(r"^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$", entry):
                 newln = re.sub(r"\n",'; ', entry)
                 newlist +=newln
     # ------------Test with pandas-----------------------------
