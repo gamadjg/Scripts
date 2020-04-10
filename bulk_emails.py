@@ -49,9 +49,9 @@ subject = input("Enter subject: ")
 body = input("Enter base body: ")
 Emailer(body, subject, recipients)
 #------------------Test fields---------------------------------
+filepath = get_list_path()
 #subject = 'Test subject'
 #body = "Test body"
-#filepath = 'C:/Users/djgama/Sync/zoomus_users_test.csv'
 #user_list = import_list(filepath)
 #print(user_list)
 #Emailer(body, subject, user_list)
