@@ -27,31 +27,32 @@ def get_list_path():
 def import_list(filepath):
     list = ''
     newlist=''
-    #df = pd.read_csv(filepath)
-    #email_col = df['Emails']
-    #return email_col.values.tolist()
-
     with open(filepath, encoding='utf-8-sig') as csvfile:
         list = csvfile.readlines()
         for entry in list:
-            newln = re.sub(r"\n",'; ', entry)
-            newlist +=newln
+            # If the first line is a header, ignore it
+            if re.search(r"email.|Email.", entry):
+                pass
+            else:
+                newln = re.sub(r"\n",'; ', entry)
+                newlist +=newln
+    # ------------Test with pandas-----------------------------
+    #df = pd.read_csv(filepath)
+    #email_col = df['Emails']
+    #return email_col.values.tolist()
     return newlist
 
 #-------------------Working-------------------------------------
 filepath = get_list_path()
-recipients = import_list(filepath)
+recipients = import_list(filepath) # Import list needs to be one column with no headers
 subject = input("Enter subject: ")
 body = input("Enter base body: ")
 Emailer(body, subject, recipients)
-
 #------------------Test fields---------------------------------
 #subject = 'Test subject'
 #body = "Test body"
-#recipients = 'gamadavid36@gmail.com'
-#--------------------------------------------------------------
 #filepath = 'C:/Users/djgama/Sync/zoomus_users_test.csv'
 #user_list = import_list(filepath)
 #print(user_list)
 #Emailer(body, subject, user_list)
-#Emailer(body, subject, 'gamadavid@gmail.com; david@clarkeconsulting.com')
+#--------------------------------------------------------------
