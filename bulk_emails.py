@@ -3,12 +3,20 @@
 # Create body of email & add attachments if necessary
 # Can we open outlook and auto-insert all emails from the list as people to send to?
 import win32com.client as win32
+import win32ui
 import os
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 import csv
 import re
 import pandas as pd
+
+def outlook_is_running():
+    try:
+        win32ui.FindWindow(None, "Microsoft Outlook")
+        return True
+    except win32ui.error:
+        return False
 
 def Emailer(text, subject, recipient):
     outlook = win32.Dispatch('outlook.application')
@@ -44,10 +52,14 @@ def import_list(filepath):
     return newlist
 
 #-------------------Working-------------------------------------
+
 filepath = get_list_path()
 recipients = import_list(filepath) # Import list needs to be one column with no headers
 subject = input("Enter subject: ")
 body = input("Enter base body: ")
+if not outlook_is_running():
+    import os
+    os.startfile("outlook")
 Emailer(body, subject, recipients)
 #------------------Test fields---------------------------------
 filepath = get_list_path()
