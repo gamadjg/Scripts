@@ -1,7 +1,13 @@
-# To send out bulk emails to all staff
-# Read emails from a csv list
-# Create body of email & add attachments if necessary
-# Can we open outlook and auto-insert all emails from the list as people to send to?
+
+"""
+-----layout of script-----
+X-Read emails from a csv list
+    X-if csv file not selected, close app
+X-request input for subject and body of email
+    X-If no subject/body entered, will set parameters to empty default values
+X-Check if outlook is Open
+        X-if not open, open Outlook
+"""
 import win32com.client as win32
 import win32ui
 import os
@@ -18,12 +24,12 @@ def outlook_is_running():
     except win32ui.error:
         return False
 
-def Emailer(text, subject, recipient):
+def Emailer(recipient, subject="", body=""): # default arguments for no errors
     outlook = win32.Dispatch('outlook.application')
     mail = outlook.CreateItem(0)
     mail.To = recipient
     mail.Subject = subject
-    mail.HtmlBody = text
+    mail.HtmlBody = body
     mail.Display(True)
     exit()
 
@@ -36,15 +42,19 @@ def get_list_path():
 def import_list(filepath):
     list = ''
     newlist=''
-    with open(filepath, encoding='utf-8-sig') as csvfile:
-        list = csvfile.readlines()
-        for entry in list:
-            # If the first line is a header, ignore it
-            if re.search(r"email.|Email.", entry):
-                pass
-            elif re.search(r"^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$", entry):
-                newln = re.sub(r"\n",'; ', entry)
-                newlist +=newln
+    try:
+        with open(filepath, encoding='utf-8-sig') as csvfile:
+            list = csvfile.readlines()
+            for entry in list:
+                # If the first line is a header, ignore it
+                if re.search(r"email.|Email.", entry):
+                    pass
+                elif re.search(r"^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$", entry):
+                    newln = re.sub(r"\n",'; ', entry)
+                    newlist +=newln
+    except:
+        print('File could not be opened, exiting application')
+        exit(1)
     # ------------Test with pandas-----------------------------
     #df = pd.read_csv(filepath)
     #email_col = df['Emails']
@@ -52,7 +62,6 @@ def import_list(filepath):
     return newlist
 
 #-------------------Working-------------------------------------
-
 filepath = get_list_path()
 recipients = import_list(filepath) # Import list needs to be one column with no headers
 subject = input("Enter subject: ")
@@ -60,9 +69,9 @@ body = input("Enter base body: ")
 if not outlook_is_running():
     import os
     os.startfile("outlook")
-Emailer(body, subject, recipients)
+Emailer(recipients, subject, body)
 #------------------Test fields---------------------------------
-filepath = get_list_path()
+#filepath = get_list_path()
 #subject = 'Test subject'
 #body = "Test body"
 #user_list = import_list(filepath)
