@@ -67,7 +67,6 @@ recipients = import_list(filepath) # Import list needs to be one column with no 
 subject = input("Enter subject: ")
 body = input("Enter base body: ")
 if not outlook_is_running():
-    import os
     os.startfile("outlook")
 Emailer(recipients, subject, body)
 #------------------Test fields---------------------------------

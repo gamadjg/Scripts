@@ -1,3 +1,7 @@
 .idea
 __pycache__
 auto_password_emailer/site.py
+Anonymous_emailer/site_info.py
+Windows_run_test.bat
+Windows_run_test.py
+smtp_test.py
